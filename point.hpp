@@ -1,9 +1,3 @@
-#include <cstdlib>
-#include <iostream>
-#include <cmath>
-
-
-using namespace std;
 
 class Point
 {
@@ -28,12 +22,3 @@ class Point
         int y;
 };
 
-// Empty Constructor
-Point::Point()
-{
-}
-
-// Deconstructor
-Point::~Point()
-{
-}
