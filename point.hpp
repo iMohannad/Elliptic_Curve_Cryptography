@@ -4,10 +4,10 @@ class Point
     public:
         Point();
         Point(int x, int y);
-        Point(Point &&) = default;
-        Point(const Point &) = default;
-        Point &operator=(Point &&) = default;
-        Point &operator=(const Point &) = default;
+        // Point(Point &&) = default;
+        // Point(const Point &) = default;
+        // Point &operator=(Point &&) = default;
+        // Point &operator=(const Point &) = default;
         ~Point();
         // Getters
         int getX();
