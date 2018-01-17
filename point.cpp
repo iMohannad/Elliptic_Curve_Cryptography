@@ -46,3 +46,7 @@ void Point::setY(int y)
     this->y = y;
 }
 
+// Negate a point by flipping the sign of y value of the point
+void Point::negate(){
+    this->y = -(this->y);
+}
