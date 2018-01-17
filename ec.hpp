@@ -2,7 +2,7 @@ class ec
 {
 public:
     ec();
-    ec(int a, int b);
+    ec(int a, int b, int M);
     // Find all points in the elliptic curve defined
     void calculatePoints();
     // Scalar multiplication returns a point X = kP
