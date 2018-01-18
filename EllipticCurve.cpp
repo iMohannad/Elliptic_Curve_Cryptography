@@ -33,21 +33,17 @@ Point EllipticCurve::add(Point A, Point B){
     int y1 = A.getY();
     int x2 = B.getX();
     int y2 = B.getY();
-    // get the slope of two points
-    int slope = findSlope(x1, y1, x2, y2);
-    cout << "Slope > " << slope << endl;
-
-    int x3 = (slope*slope - x1 - x2) % M;
-    // cout << "x3 > " << x3 << endl;
-    if (x3 < 0) {
-        x3 = (x3 + M) % M;
+    // get the slope of two points, it returns a point to the slope.
+    int *slopeValue = findSlope(x1, y1, x2, y2);
+    // Check if the pointer is null
+    if (slopeValue == NULL) {
+        Point P(-M, -M);
+        return P;
     }
-
-    int y3 = (slope*(x1 - x3) - y1) % M;
-    // cout << "y3 > " << y3 << endl;
-    if (y3 < 0) {
-        y3 = (y3 + M) % M;
-    }
+    int slope = *slopeValue;
+    
+    int x3 = modulo(slope*slope - x1 - x2, M);
+    int y3 = modulo(slope*(x1 - x3) - y1, M);
 
     Point P(x3, y3);
 
@@ -57,8 +53,9 @@ Point EllipticCurve::add(Point A, Point B){
 
 
 
-int EllipticCurve::findSlope(int x1, int y1, int x2, int y2) {
-    int slope, numerator, denominator;
+int * EllipticCurve::findSlope(int x1, int y1, int x2, int y2) {
+    int *slope; // initialize a pointer to slope
+    int numerator, denominator;
     // if the two points are equal, slope is for point doubling
     // else slope is for point addition operation.
     if ((x1 == x2) && (y1 == y2)) {
@@ -68,7 +65,10 @@ int EllipticCurve::findSlope(int x1, int y1, int x2, int y2) {
         numerator = modulo(y2-y1, M);
         denominator = modulo(x2-x1, M);
     }
+    if (denominator == 0) {
+        return NULL;
+    }
     int inv = inverseMod(denominator, this->M);
-    slope = inv*numerator % this->M;
+    *slope = inv*numerator % this->M;
     return slope;
 }

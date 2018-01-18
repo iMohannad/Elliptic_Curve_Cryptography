@@ -17,5 +17,5 @@ private:
     int a, b; // points for elliptic curve equation
     int M; // module
     // Calculate the slope of two points
-    int findSlope(int x1, int y1, int x2, int y2);
+    int * findSlope(int x1, int y1, int x2, int y2);
 };
