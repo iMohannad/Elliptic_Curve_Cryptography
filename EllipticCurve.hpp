@@ -12,6 +12,8 @@ public:
     // Returns A + B
     Point add(Point A, Point B);
     ~EllipticCurve();
+    // ostream handler: print this ellitpic curve equation
+    friend std::ostream& operator <<(std::ostream& os, const EllipticCurve& ec);
 
 private:
     int a, b; // points for elliptic curve equation

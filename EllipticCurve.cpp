@@ -72,3 +72,10 @@ int * EllipticCurve::findSlope(int x1, int y1, int x2, int y2) {
     *slope = inv*numerator % this->M;
     return slope;
 }
+
+// ostream handler: print this elliptic curve equation
+std::ostream& operator <<(std::ostream& os, const EllipticCurve& ec)
+{
+    return (os << "y^2 = x^3 + " << ec.a << "x + " << ec.b <<
+                " Mod " << ec.M);
+}
