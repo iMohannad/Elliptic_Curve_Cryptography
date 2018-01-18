@@ -11,10 +11,10 @@ EllipticCurve::EllipticCurve()
     EllipticCurve(1, 1, 17);
 }
 
-EllipticCurve::EllipticCurve(int a, int b, int M){
-    this->a = a;
-    this->b = b;
-    this->M = M;
+EllipticCurve::EllipticCurve(int a, int b, int M) : a(a), b(b), M(M) {
+    // this->a = a;
+    // this->b = b;
+    // this->M = M;
 }
 
 EllipticCurve::~EllipticCurve()
