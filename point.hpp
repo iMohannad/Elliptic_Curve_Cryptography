@@ -1,4 +1,3 @@
-
 class Point
 {
     public:
@@ -19,6 +18,9 @@ class Point
 
         // Negate a point by changing the sign of y value
         void negate();
+
+        // ostream handler: print this point
+        friend std::ostream& operator <<(std::ostream& os, const Point& p);
 
     private:
         int x;

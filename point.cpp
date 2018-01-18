@@ -50,3 +50,9 @@ void Point::setY(int y)
 void Point::negate(){
     this->y = -(this->y);
 }
+
+// ostream handler: print this point
+std::ostream& operator <<(std::ostream& os, const Point& p)
+{
+    return (os << "(" << p.x << ", " << p.y << ")");
+}
