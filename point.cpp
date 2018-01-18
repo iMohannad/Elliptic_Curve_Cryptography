@@ -10,7 +10,7 @@ using namespace std;
 // Empty Constructor
 Point::Point()
 {
-    Point(NULL, NULL);
+    Point(0, 0);
 }
 
 Point::Point (int x, int y)
