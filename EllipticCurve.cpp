@@ -41,7 +41,7 @@ Point EllipticCurve::add(Point A, Point B){
         return P;
     }
     int slope = *slopeValue;
-    
+
     int x3 = modulo(slope*slope - x1 - x2, M);
     int y3 = modulo(slope*(x1 - x3) - y1, M);
 
