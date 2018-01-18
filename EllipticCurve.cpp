@@ -3,8 +3,10 @@
 #include <cmath>
 
 #include "EllipticCurve.hpp"
+#include "NumberTheory.cpp"
 
 using namespace std;
+using namespace Cryptography;
 
 EllipticCurve::EllipticCurve()
 {
@@ -33,7 +35,7 @@ Point EllipticCurve::add(Point A, Point B){
     int y2 = B.getY();
     // get the slope of two points
     int slope = findSlope(x1, y1, x2, y2);
-    // cout << "Slope > " << slope << endl;
+    cout << "Slope > " << slope << endl;
 
     int x3 = (slope*slope - x1 - x2) % M;
     // cout << "x3 > " << x3 << endl;
@@ -56,15 +58,17 @@ Point EllipticCurve::add(Point A, Point B){
 
 
 int EllipticCurve::findSlope(int x1, int y1, int x2, int y2) {
-    int slope, ydiff, xdiff;
+    int slope, numerator, denominator;
     // if the two points are equal, slope is for point doubling
     // else slope is for point addition operation.
     if ((x1 == x2) && (y1 == y2)) {
-        slope = (((3*x1*x1) + this->a)/(2*y1)) % this->M;
+        numerator = modulo((3*x1*x1) + this->a, M);
+        denominator = modulo(2*y1, M);
     } else {
-        ydiff = y2 - y1;
-        xdiff = x2 - x1;
-        slope = (ydiff / xdiff) % this->M;
+        numerator = modulo(y2-y1, M);
+        denominator = modulo(x2-x1, M);
     }
+    int inv = inverseMod(denominator, this->M);
+    slope = inv*numerator % this->M;
     return slope;
 }
