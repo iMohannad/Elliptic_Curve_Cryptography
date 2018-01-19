@@ -24,7 +24,23 @@ EllipticCurve::~EllipticCurve()
 }
 
 // Scalar multiplication returns a point X = kP
-// Point EllipticCurve::scalarMultiply(int k, Point P);
+Point EllipticCurve::scalarMultiply(int k, Point P){
+    Point Q; // Initalize a point to (0,0)
+    Point R = P;
+    // cout << "Q =  " << Q << endl;
+    // cout << "R =  " << R << endl;
+    while (k != 0) {
+        if (k & 1) {
+            // cout << "R + Q = " << R << " + " << Q  << " = ";
+            Q = add(Q, R);
+            // cout << Q << endl;
+        }
+        R = add(R, R);
+        k = k >> 1; // shift k one bit to the right
+    }
+    return Q;
+
+}
 
 // Returns A + B
 Point EllipticCurve::add(Point A, Point B){
@@ -33,6 +49,15 @@ Point EllipticCurve::add(Point A, Point B){
     int y1 = A.getY();
     int x2 = B.getX();
     int y2 = B.getY();
+
+    // Check if point A or point B = 0;
+    if (x1 == 0 && y1 == 0) {
+        return B;
+    }
+    if (x2 == 0 && y2 == 0) {
+        return A;
+    }
+
     // get the slope of two points, it returns a point to the slope.
     int *slopeValue = findSlope(x1, y1, x2, y2);
     // Check if the pointer is null
