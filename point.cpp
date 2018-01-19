@@ -8,9 +8,8 @@ using namespace std;
 
 
 // Empty Constructor
-Point::Point()
+Point::Point() : x(0), y(0)
 {
-    Point(0, 0);
 }
 
 Point::Point (int x, int y)
