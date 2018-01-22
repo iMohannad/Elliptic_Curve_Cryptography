@@ -1,9 +1,10 @@
+#include <iostream>
 
 class NAF {
     public:
         NAF();
-        NAF(int [] input, int size);
-        NAF(int [] input);
+        NAF(int input[], int size);
+        NAF(int input[]);
         int * convertNAF(int k);
         int * getNAF();
         // ostream handler: Print NAF
@@ -13,6 +14,14 @@ class NAF {
         int nbits = 0; // Number of bits of the NAF number
 };
 
+NAF::NAF() {
+    NAFNumber = nullptr;
+    nbits = 0;
+}
+
+NAF::NAF(int input[], int size) : NAFNumber(input), nbits(size)
+{
+}
 
 int * NAF::convertNAF(int k) {
     int * dArray = new int[500];
