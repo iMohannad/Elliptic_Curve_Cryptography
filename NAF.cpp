@@ -28,7 +28,6 @@ int * NAF::convertNAF(int k) {
         }
         k = k/2;
         dArray[count] = ki;
-        cout << "count = " << count << ", ki = " << ki << endl;
         count +=1;
     }
 
@@ -44,10 +43,14 @@ int * NAF::convertNAF(int k) {
     // delete the point of the array
     delete [] dArray;
     dArray = NULL; // Clear to prevent using invalid memory reference
+
     return NAFNumber;
 }
 
-// Return a copy of the NAF number
+// Passing an array and copy the NAFNumber to that array.
+/* The *& sybmol means reference to a pointer so that modification of the array
+ * results in modification of the main array passed to this function
+ */
 void NAF::getNAF(int *&copyNAF) {
     if (nbits == 0)
         return;
@@ -55,17 +58,17 @@ void NAF::getNAF(int *&copyNAF) {
     int * copyData = new int[nbits];
     for (int i = 0; i < nbits;i++) {
         copyData[i] = NAFNumber[i];
-        cout << "copyData[" << i << "] = " << copyData[i] << endl;
-        cout << "NAFNumber[" << i << "] = " << NAFNumber[i] << endl;
     }
-    cout << "NAF ARRAY OF SIZE " << sizeof(copyNAF) << endl;
     copyNAF = copyData;
 }
 
+// Return the number of bits (size) of NAF number
 int NAF::getSize() {
     return nbits;
 }
 
+
+// Print the NAF number
 std::ostream& operator <<(std::ostream& os, const NAF& k){
     for (int i=0; i<k.nbits; i++){
         os << k.NAFNumber[k.nbits-i-1] << " ";
