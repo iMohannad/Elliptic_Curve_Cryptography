@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cmath>
 #include "EllipticCurve.hpp"
+#include "NAF.hpp"
 
 using namespace std;
 
@@ -18,5 +19,18 @@ int main() {
         R = ec.scalarMultiply(i, Q);
         cout << i << "P = " << R << endl;
     }
+
+    NAF naf;
+    int *x = naf.convertNAF(7);
+    cout << "NAF representation of 7 is " << naf << endl;
+    int *array;
+    naf.getNAF(array);
+    cout << "Size of NAF " << naf.getSize() << endl;
+    for (int i=0; i < 4; i++) {
+        cout << array[i] << " ";
+    }
+    cout << endl;
+    delete array;
+    delete x;
     return 0;
 }
