@@ -7,7 +7,7 @@ class NAF {
         friend std::ostream& operator <<(std::ostream& os, const NAF& p);
     private:
         int * NAFNumber;
-        int nbits; // Number of bits of the NAF number
+        int nbits = 0; // Number of bits of the NAF number
 };
 
 
@@ -33,11 +33,23 @@ int * NAF::convertNAF(int k) {
 
     count--; // Reduce count by 1 because of the last iteration
     nbits = count; // size the size of the NAF number
-    for (int i=0; i<count; i++) {
+    for (int i=0; i<nbits; i++) {
         NAFNumber[i] = dArray[count--];
     }
 
     // delete the point of the array
     delete [] dArray;
     dArray = nullptr; // Clear to prevent using invalid memory reference
+}
+
+// Return a copy of the NAF number
+int * NAF::getNAF() {
+    if (nbits == 0)
+        return nullptr;
+    // A variable to store the copy data
+    int copyNAF[nbits];
+    for (int i = 0; i < nbits;i++) {
+        copyNAF[i] = NAFNumber[i];
+    }
+    return copyNAF;
 }
