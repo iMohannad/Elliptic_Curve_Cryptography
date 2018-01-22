@@ -55,7 +55,7 @@ Point EllipticCurve::add(Point A, Point B){
     int *slopeValue = findSlope(x1, y1, x2, y2);
     // Check if the pointer is null
     if (slopeValue == NULL) {
-        Point P(-M, -M);
+        Point P(0, 0);
         return P;
     }
     int slope = *slopeValue;
