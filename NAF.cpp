@@ -53,3 +53,10 @@ int * NAF::getNAF() {
     }
     return copyNAF;
 }
+
+std::ostream& operator <<(std::ostream& os, const NAF& k){
+    for (int i=0; i<k.nbits; i++){
+        os << k.NAFNumber[i] << " ";
+    }
+    return os;
+}
