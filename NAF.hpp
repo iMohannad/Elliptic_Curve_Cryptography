@@ -3,7 +3,8 @@ class NAF {
         NAF();
         NAF(int input[], int size);
         int * convertNAF(int k);
-        int * getNAF();
+        void getNAF(int *&copyNAF);
+        int getSize();
         // ostream handler: Print NAF
         friend std::ostream& operator <<(std::ostream& os, const NAF& p);
     private:

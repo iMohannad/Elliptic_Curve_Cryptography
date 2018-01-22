@@ -28,16 +28,17 @@ int * NAF::convertNAF(int k) {
         }
         k = k/2;
         dArray[count] = ki;
+        cout << "count = " << count << ", ki = " << ki << endl;
         count +=1;
     }
 
-    // Copy the array backword to the NAFNumber Array;
+    // Initalize a space for NAFNumber equal to the size of the NAF generated
     NAFNumber = new int[count];
 
-    count--; // Reduce count by 1 because of the last iteration
-    nbits = count; // size the size of the NAF number
+    // Set the size of the NAF number
+    nbits = count;
     for (int i=0; i<nbits; i++) {
-        NAFNumber[i] = dArray[count--];
+        NAFNumber[i] = dArray[i];
     }
 
     // delete the point of the array
@@ -47,20 +48,27 @@ int * NAF::convertNAF(int k) {
 }
 
 // Return a copy of the NAF number
-int * NAF::getNAF() {
+void NAF::getNAF(int *&copyNAF) {
     if (nbits == 0)
-        return NULL;
+        return;
     // A variable to store the copy data
-    int copyNAF[nbits];
+    int * copyData = new int[nbits];
     for (int i = 0; i < nbits;i++) {
-        copyNAF[i] = NAFNumber[i];
+        copyData[i] = NAFNumber[i];
+        cout << "copyData[" << i << "] = " << copyData[i] << endl;
+        cout << "NAFNumber[" << i << "] = " << NAFNumber[i] << endl;
     }
-    return NAFNumber;
+    cout << "NAF ARRAY OF SIZE " << sizeof(copyNAF) << endl;
+    copyNAF = copyData;
+}
+
+int NAF::getSize() {
+    return nbits;
 }
 
 std::ostream& operator <<(std::ostream& os, const NAF& k){
     for (int i=0; i<k.nbits; i++){
-        os << k.NAFNumber[i] << " ";
+        os << k.NAFNumber[k.nbits-i-1] << " ";
     }
     return os;
 }
