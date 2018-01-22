@@ -14,6 +14,8 @@ NAF::NAF(int input[], int size) : NAFNumber(input), nbits(size)
 {
 }
 
+
+// Convert an integer to NAF representation
 int * NAF::convertNAF(int k) {
     int * dArray = new int[500];
     int count = 0; //count the number of bits in the NAF number
