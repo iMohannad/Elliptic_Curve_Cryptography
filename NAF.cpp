@@ -1,6 +1,9 @@
 
 class NAF {
     public:
+        NAF();
+        NAF(int [] input, int size);
+        NAF(int [] input);
         int * convertNAF(int k);
         int * getNAF();
         // ostream handler: Print NAF
