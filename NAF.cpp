@@ -1,21 +1,12 @@
 #include <iostream>
+#include <cstdlib>
+#include "NAF.hpp"
 
-class NAF {
-    public:
-        NAF();
-        NAF(int input[], int size);
-        NAF(int input[]);
-        int * convertNAF(int k);
-        int * getNAF();
-        // ostream handler: Print NAF
-        friend std::ostream& operator <<(std::ostream& os, const NAF& p);
-    private:
-        int * NAFNumber;
-        int nbits = 0; // Number of bits of the NAF number
-};
+using namespace std;
+
 
 NAF::NAF() {
-    NAFNumber = nullptr;
+    NAFNumber = NULL;
     nbits = 0;
 }
 
@@ -51,19 +42,20 @@ int * NAF::convertNAF(int k) {
 
     // delete the point of the array
     delete [] dArray;
-    dArray = nullptr; // Clear to prevent using invalid memory reference
+    dArray = NULL; // Clear to prevent using invalid memory reference
+    return NAFNumber;
 }
 
 // Return a copy of the NAF number
 int * NAF::getNAF() {
     if (nbits == 0)
-        return nullptr;
+        return NULL;
     // A variable to store the copy data
     int copyNAF[nbits];
     for (int i = 0; i < nbits;i++) {
         copyNAF[i] = NAFNumber[i];
     }
-    return copyNAF;
+    return NAFNumber;
 }
 
 std::ostream& operator <<(std::ostream& os, const NAF& k){
