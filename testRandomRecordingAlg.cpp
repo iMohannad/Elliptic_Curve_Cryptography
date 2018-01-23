@@ -14,6 +14,7 @@ int main() {
     cout << "Wn > " << Wn << endl;
     int size_Dw;
     int WMAX = getWMax(k, Wn, D, size);
+    cout << "Wmax = " << WMAX << endl;
     get_Dw(Dw, D, 3, size, size_Dw);
     for (int i =0; i<size_Dw; i++) {
         cout << Dw[i] << " ";
@@ -27,6 +28,7 @@ int main() {
     for (int i =0; i<size_Dw; i++) {
         cout << Dw_complement[i] << " ";
     }
+
     cout << endl;
     return 0;
 }

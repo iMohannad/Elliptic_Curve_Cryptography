@@ -1,31 +1,10 @@
 #include <cmath>
 #include <list>
 #include <iostream>
+#include <algorithm>
 
 namespace RDP
 {
-    int getWMax(int k, int Wn, int * D, int size) {
-        int w = Wn + 2; // Upper bound of w
-        int * Dw_complement;
-        int size_Dw_Comp;
-        bool cond1 = true;
-        for (int i=Wn+2; i > 0; i--) {
-            // Search if di < k
-            for (int j = 0; j < size; j++) {
-                if (D[j] >= k) {
-                    cond1 = false;
-                    break;
-                }
-            }
-            if (!cond1) {
-                cond1 = true;
-                continue;
-            }
-            get_Dw_complement(Dw_complement, D, i, size, size_Dw_Comp);
-            
-        }
-    }
-
     // pw(k) = k % (2**w)
     int pw(int k, int w) {
         return k % (int) pow(2, w);
@@ -79,5 +58,39 @@ namespace RDP
             if (D[i] > max) max = D[i];
         }
         return (int) floor(log2(max));
+    }
+
+    int getWMax(int k, int Wn, int * D, int size) {
+        int w = Wn + 2; // Upper bound of w
+        int * Dw_complement;
+        int size_Dw_Comp;
+        bool cond1 = true;
+        for (int i=Wn+2; i > 0; i--) {
+            // Search if di < k
+            for (int j = 0; j < size; j++) {
+                if (D[j] >= k) {
+                    cond1 = false;
+                    break;
+                }
+            }
+            // Pick a smaller w
+            if (!cond1) {
+                cond1 = true;
+                continue;
+            }
+            get_Dw_complement(Dw_complement, D, i, size, size_Dw_Comp);
+            // for (int j =0; j<size_Dw_Comp; j++) {
+            //     std::cout << Dw_complement[j] << " ";
+            // }
+            // std::cout << std::endl;
+
+            int pw_k = pw(k, i);
+            int * p = std::find(Dw_complement, Dw_complement+size_Dw_Comp, pw_k);
+            // std::cout << "Pw(k) = " << pw_k << ", P > " << *p << std::endl;
+            if(p != Dw_complement+size_Dw_Comp) {
+                return i;
+            }
+        }
+        std::cout << "No w found to match the condition" << std::endl;
     }
 }
