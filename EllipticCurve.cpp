@@ -35,6 +35,34 @@ Point EllipticCurve::scalarMultiply(int k, Point P){
 
 }
 
+/* Algorithm used is the following:
+ * Q = 0;
+ * For i = l-1 to 0:
+ *      Q = 2Q;
+ *      if (ki == 1) then Q = Q+P
+ *      if (ki == -1) then Q = Q-P
+ * return Q
+ */
+Point EllipticCurve::scalarMultiplyNAF(int * k, Point P, int size) {
+    Point Q; // Initialize a point to (0, 0)
+    Point R = P;
+    int index; // to store the index
+    for(int i=0; i < size; i++) {
+        index = k[size-1-i]; // Get the bits from most significant bit
+        Q = add(Q, Q);
+        if (k[size-1-i] == 1) {
+            Q = add(Q, R);
+        }
+        if(k[size-1-i] == -1) {
+            // Get the negative value of R
+            R.negate();
+            Q = add(Q, R);
+            R.negate(); // Return R to positive
+        }
+    }
+    return Q;
+}
+
 // Returns A + B
 Point EllipticCurve::add(Point A, Point B){
     // get all x and y values of points A and B
