@@ -93,4 +93,32 @@ namespace RDP
         }
         std::cout << "No w found to match the condition" << std::endl;
     }
+
+    int digitD(int *& result, int k, int * D, int size) {
+        std::list<int> tempResult;
+        if (k%2 == 0) {
+            return 0;
+        }
+        int Wn = get_Wn(D, size);
+        int WMAX = getWMax(k, Wn, D, size);
+        int * Dw;
+        int size_Dw;
+        get_Dw(Dw, D, WMAX, size, size_Dw);
+        int pw_k = pw(k, WMAX);
+        
+        /* If pwmax(k) in Dwmax:
+         *      if (pw(k) == pw(d)) return d
+         */
+        
+        int * found = std::find(Dw, Dw+size_Dw, pw_k);
+        if (found != Dw+size_Dw) {
+            for (int j = 0; j < size; j++) {
+                if (pw(k, WMAX) == pw(D[j], WMAX)) {
+                    return D[j];
+                }
+            }
+        }
+
+
+    }
 }
