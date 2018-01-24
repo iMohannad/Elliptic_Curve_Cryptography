@@ -9,6 +9,7 @@ public:
     void calculatePoints();
     // Scalar multiplication returns a point X = kP
     Point scalarMultiply(int k, Point P);
+    Point scalarMultiplyRDP(int * k, Point P, int size, int * D, int sizeD);
     // Scalar multiplication where the input is NAF representation
     Point scalarMultiplyNAF(int * k, Point P, int size);
     // Returns A + B
