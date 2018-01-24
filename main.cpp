@@ -21,16 +21,22 @@ int main() {
     }
 
     NAF naf;
-    int *x = naf.convertNAF(7);
+    int *x = naf.convertNAF(19);
     cout << "NAF representation of 7 is " << naf << endl;
     int *array;
     naf.getNAF(array);
     cout << "Size of NAF " << naf.getSize() << endl;
-    for (int i=0; i < 4; i++) {
+    for (int i=0; i < naf.getSize(); i++) {
         cout << array[i] << " ";
     }
+
     cout << endl;
-    delete array;
-    delete x;
+    //delete array;
+    //delete x;
+
+
+    R = ec.scalarMultiplyNAF(array, Q, naf.getSize());
+    cout << "Point =  " << R << endl;
+
     return 0;
 }
