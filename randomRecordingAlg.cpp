@@ -147,14 +147,11 @@ namespace RDP
     void RDPAlgorithm(int k, int * D, int size, int *& result, int &resultSize) {
         std::list<int> resultList;
         int ki;
-        int count = 0;
         while (k != 0) {
-            count++;
             ki = digitD(k, D, size);
             k = (k - ki) / 2;
             // std::cout << "k > " << k << std::endl;
             resultList.push_back(ki);
-            if(count > 20) break;
         }
         std::list<int>::iterator it = resultList.begin();
         resultSize = resultList.size();
