@@ -95,9 +95,13 @@ namespace RDP
     }
 
     int digitD(int k, int * D, int size) {
+        std::cout << "---------------------------------" << std::endl;
         std::list<int> tempResult;
         if (k%2 == 0) {
             return 0;
+        }
+        if (k == 1) {
+            return k;
         }
         int Wn = get_Wn(D, size);
         int WMAX = getWMax(k, Wn, D, size);
@@ -110,7 +114,7 @@ namespace RDP
         }
         std::cout << std::endl;
         int pw_k = pw(k, WMAX);
-
+        std::cout << "pw(k) > " << pw_k << std::endl;
         /* If pwmax(k) in Dwmax:
          *      if (pw(k) == pw(d)) return d
          */
@@ -118,17 +122,20 @@ namespace RDP
         if (found != Dw+size_Dw) {
             for (int j = 0; j < size; j++) {
                 if (pw(k, WMAX) == pw(D[j], WMAX)) {
+                    std::cout << "D >> " << D[j] << std::endl;
                     return D[j];
                 }
             }
         }
 
         int pw_comp = (int) pow(2, WMAX) - pw(k, WMAX);
-        found = std::find(Dw, Dw+size_Dw, pw_k);
+        std::cout << "2^w - pw(k) > " << pw_comp << std::endl;
+        found = std::find(Dw, Dw+size_Dw, pw_comp);
         if (found != Dw+size_Dw) {
             for (int j = 0; j < size; j++) {
                 if (((int) pow(2, WMAX) - pw(k, WMAX)) == pw(D[j], WMAX)) {
-                    return D[j];
+                    std::cout << "D >> " << -D[j] << std::endl;
+                    return -D[j];
                 }
             }
         }
@@ -140,10 +147,14 @@ namespace RDP
     void RDPAlgorithm(int k, int * D, int size, int *& result, int &resultSize) {
         std::list<int> resultList;
         int ki;
+        int count = 0;
         while (k != 0) {
+            count++;
             ki = digitD(k, D, size);
             k = (k - ki) / 2;
+            std::cout << "k > " << k << std::endl;
             resultList.push_back(ki);
+            if(count > 20) break;
         }
         std::list<int>::iterator it = resultList.begin();
         resultSize = resultList.size();
