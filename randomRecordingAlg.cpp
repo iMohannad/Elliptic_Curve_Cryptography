@@ -94,7 +94,7 @@ namespace RDP
         std::cout << "No w found to match the condition" << std::endl;
     }
 
-    int digitD(int *& result, int k, int * D, int size) {
+    int digitD(int k, int * D, int size) {
         std::list<int> tempResult;
         if (k%2 == 0) {
             return 0;
@@ -104,12 +104,16 @@ namespace RDP
         int * Dw;
         int size_Dw;
         get_Dw(Dw, D, WMAX, size, size_Dw);
+        std::cout << "Wn > " << Wn << ", Wmax > " << WMAX << ", size_Dw >> " << size_Dw << std::endl;
+        for (int i =0; i<size_Dw; i++) {
+            std::cout << Dw[i] << " ";
+        }
+        std::cout << std::endl;
         int pw_k = pw(k, WMAX);
-        
+
         /* If pwmax(k) in Dwmax:
          *      if (pw(k) == pw(d)) return d
          */
-        
         int * found = std::find(Dw, Dw+size_Dw, pw_k);
         if (found != Dw+size_Dw) {
             for (int j = 0; j < size; j++) {
@@ -119,6 +123,34 @@ namespace RDP
             }
         }
 
+        int pw_comp = (int) pow(2, WMAX) - pw(k, WMAX);
+        found = std::find(Dw, Dw+size_Dw, pw_k);
+        if (found != Dw+size_Dw) {
+            for (int j = 0; j < size; j++) {
+                if (((int) pow(2, WMAX) - pw(k, WMAX)) == pw(D[j], WMAX)) {
+                    return D[j];
+                }
+            }
+        }
 
+        std::cout << "No digit D was found" << std::endl;
+    }
+
+
+    void RDPAlgorithm(int k, int * D, int size, int *& result, int &resultSize) {
+        std::list<int> resultList;
+        int ki;
+        while (k != 0) {
+            ki = digitD(k, D, size);
+            k = (k - ki) / 2;
+            resultList.push_back(ki);
+        }
+        std::list<int>::iterator it = resultList.begin();
+        resultSize = resultList.size();
+        result = new int[resultSize];
+        for (int i = 0; i < resultSize; i++) {
+            result[i] = *it;
+            it++;
+        }
     }
 }
