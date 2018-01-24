@@ -39,18 +39,30 @@ Point EllipticCurve::scalarMultiplyRDP(int * k, Point P, int size, int * D, int 
     Point Q; // Initialize a point to (0, 0)
     Point R = P;
     std::map<int, Point> RDPMap;
+
+    map<int, Point>::iterator it;
     for (int i = 0; i < sizeD; i++) {
         Point X = scalarMultiply(D[i], P);
         RDPMap.insert(std::pair<int, Point>(D[i], X));
     }
 
+    for(it = RDPMap.begin(); it != RDPMap.end(); it++) {
+        std::cout << it->first << " : " << it->second << std::endl;
+    }
     int index; // to store the index
     Point T;
     for(int i=0; i < size; i++) {
         index = k[size-1-i]; // Get the bits from most significant bit
         Q = add(Q, Q);
         if (index != 0) {
-            Q = add(Q, RDPMap.at(index));
+            if (index < 0) {
+                T = RDPMap.at(abs(index));
+                T.negate();
+                Q = add(Q, T);
+                T.negate();
+            }
+            else
+                Q = add(Q, RDPMap.at(index));
         }
     }
     return Q;
@@ -71,10 +83,10 @@ Point EllipticCurve::scalarMultiplyNAF(int * k, Point P, int size) {
     for(int i=0; i < size; i++) {
         index = k[size-1-i]; // Get the bits from most significant bit
         Q = add(Q, Q);
-        if (k[size-1-i] == 1) {
+        if (index == 1) {
             Q = add(Q, R);
         }
-        if(k[size-1-i] == -1) {
+        if(index == -1) {
             // Get the negative value of R
             R.negate();
             Q = add(Q, R);
