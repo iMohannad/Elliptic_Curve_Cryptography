@@ -19,6 +19,7 @@ public:
     friend std::ostream& operator <<(std::ostream& os, const EllipticCurve& ec);
 
 private:
+    bool time;
     int a, b; // points for elliptic curve equation
     int M; // module
     // Calculate the slope of two points

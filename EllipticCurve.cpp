@@ -15,6 +15,7 @@ EllipticCurve::EllipticCurve()
 }
 
 EllipticCurve::EllipticCurve(int a, int b, int M) : a(a), b(b), M(M) {
+    time = true;
 }
 
 EllipticCurve::~EllipticCurve()
@@ -25,6 +26,7 @@ EllipticCurve::~EllipticCurve()
 Point EllipticCurve::scalarMultiply(int k, Point P){
     Point Q; // Initalize a point to (0,0)
     Point R = P;
+    clock_t begin_time = clock();
     while (k != 0) {
         if (k & 1) {
             Q = add(Q, R);
@@ -32,6 +34,8 @@ Point EllipticCurve::scalarMultiply(int k, Point P){
         R = add(R, R);
         k = k >> 1; // shift k one bit to the right
     }
+    if (time)
+        std::cout << "Time >> " << float( clock () - begin_time ) /  CLOCKS_PER_SEC << endl;
     return Q;
 }
 
@@ -41,18 +45,21 @@ Point EllipticCurve::scalarMultiplyRDP(int * k, Point P, int size, int * D, int 
     std::map<int, Point> RDPMap;
 
     map<int, Point>::iterator it;
+    time = false;
     for (int i = 0; i < sizeD; i++) {
         Point X = scalarMultiply(D[i], P);
         RDPMap.insert(std::pair<int, Point>(D[i], X));
     }
+    time = true;
 
-    for(it = RDPMap.begin(); it != RDPMap.end(); it++) {
-        std::cout << it->first << " : " << it->second << std::endl;
-    }
+    // for(it = RDPMap.begin(); it != RDPMap.end(); it++) {
+    //     std::cout << it->first << " : " << it->second << std::endl;
+    // }
     int index; // to store the index
     Point T;
+    clock_t begin_time = clock();
     for(int i=0; i < size; i++) {
-        index = k[size-1-i]; // Get the bits from most significant bit
+        index = k[size - 1 - i]; // Get the bits from most significant bit
         Q = add(Q, Q);
         if (index != 0) {
             if (index < 0) {
@@ -65,6 +72,7 @@ Point EllipticCurve::scalarMultiplyRDP(int * k, Point P, int size, int * D, int 
                 Q = add(Q, RDPMap.at(index));
         }
     }
+    std::cout << "Time >> " << float( clock () - begin_time ) /  CLOCKS_PER_SEC << endl;
     return Q;
 }
 
@@ -80,6 +88,7 @@ Point EllipticCurve::scalarMultiplyNAF(int * k, Point P, int size) {
     Point Q; // Initialize a point to (0, 0)
     Point R = P;
     int index; // to store the index
+    clock_t begin_time = clock();
     for(int i=0; i < size; i++) {
         index = k[size-1-i]; // Get the bits from most significant bit
         Q = add(Q, Q);
@@ -93,6 +102,7 @@ Point EllipticCurve::scalarMultiplyNAF(int * k, Point P, int size) {
             R.negate(); // Return R to positive
         }
     }
+    std::cout << "Time >> " << float( clock () - begin_time ) /  CLOCKS_PER_SEC << endl;
     return Q;
 }
 
