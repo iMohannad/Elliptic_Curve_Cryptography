@@ -1,6 +1,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <cmath>
+#include <map>
 
 #include "EllipticCurve.hpp"
 #include "NumberTheory.cpp"
@@ -32,7 +33,27 @@ Point EllipticCurve::scalarMultiply(int k, Point P){
         k = k >> 1; // shift k one bit to the right
     }
     return Q;
+}
 
+Point EllipticCurve::scalarMultiplyRDP(int * k, Point P, int size, int * D, int sizeD) {
+    Point Q; // Initialize a point to (0, 0)
+    Point R = P;
+    std::map<int, Point> RDPMap;
+    for (int i = 0; i < sizeD; i++) {
+        Point X = scalarMultiply(D[i], P);
+        RDPMap.insert(std::pair<int, Point>(D[i], X));
+    }
+
+    int index; // to store the index
+    Point T;
+    for(int i=0; i < size; i++) {
+        index = k[size-1-i]; // Get the bits from most significant bit
+        Q = add(Q, Q);
+        if (index != 0) {
+            Q = add(Q, RDPMap.at(index));
+        }
+    }
+    return Q;
 }
 
 /* Algorithm used is the following:
