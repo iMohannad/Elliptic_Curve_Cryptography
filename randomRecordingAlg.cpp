@@ -67,8 +67,10 @@ namespace RDP
         bool cond1 = true;
         for (int i=Wn+2; i > 0; i--) {
             // Search if di < k
+            get_Dw_complement(Dw_complement, D, i, size, size_Dw_Comp);
+
             for (int j = 0; j < size; j++) {
-                if (D[j] >= k) {
+                if (Dw_complement[j] >= k) {
                     cond1 = false;
                     break;
                 }
@@ -78,11 +80,7 @@ namespace RDP
                 cond1 = true;
                 continue;
             }
-            get_Dw_complement(Dw_complement, D, i, size, size_Dw_Comp);
-            // for (int j =0; j<size_Dw_Comp; j++) {
-            //     std::cout << Dw_complement[j] << " ";
-            // }
-            // std::cout << std::endl;
+            
 
             int pw_k = pw(k, i);
             int * p = std::find(Dw_complement, Dw_complement+size_Dw_Comp, pw_k);
