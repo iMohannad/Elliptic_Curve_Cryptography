@@ -33,7 +33,7 @@ namespace RDP
         std::list<int> Dw_complement_list (Dw, Dw+size_Dw);
         int temp;
         int constant = (int) pow(2, w);
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < size_Dw; i++) {
             temp = constant - Dw[i];
             Dw_complement_list.push_back(temp);
         }
@@ -69,7 +69,7 @@ namespace RDP
             // Search if di < k
             get_Dw_complement(Dw_complement, D, i, size, size_Dw_Comp);
 
-            for (int j = 0; j < size; j++) {
+            for (int j = 0; j < size_Dw_Comp; j++) {
                 if (Dw_complement[j] >= k) {
                     cond1 = false;
                     break;
@@ -81,7 +81,7 @@ namespace RDP
                 continue;
             }
             
-
+            
             int pw_k = pw(k, i);
             int * p = std::find(Dw_complement, Dw_complement+size_Dw_Comp, pw_k);
             // std::cout << "Pw(k) = " << pw_k << ", P > " << *p << std::endl;
