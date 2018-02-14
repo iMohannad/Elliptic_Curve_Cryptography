@@ -1,13 +1,12 @@
 #include <iostream>
 #include "randomRecordingAlg.cpp"
-//#include <randomRecordingAlg.cpp>
 
 using namespace std;
 using namespace RDP;
 
 int main() {
     int k = 31415;
-    int D[] = {1, 3, 23, 27};
+    int D[] = {1, 29, 43, 53, 69, 71, 73, 91, 93, 95};
     int size = sizeof(D)/sizeof(*D);
     // int * Dw;
     // int Wn = get_Wn(D, size);
