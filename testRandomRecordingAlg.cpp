@@ -6,7 +6,7 @@ using namespace RDP;
 
 int main() {
     int k = 31415;
-    int D[] = {1, 29, 43, 53, 69, 71, 73, 91, 93, 95};
+    int D[] = {1, 19, 23, 33, 47, 55, 79, 85, 89, 93};
     int size = sizeof(D)/sizeof(*D);
     // int * Dw;
     // int Wn = get_Wn(D, size);
