@@ -1,38 +1,87 @@
 #include <cmath>
 #include <list>
 #include <iostream>
+#include <string>
 #include <algorithm>
+#include "BigInteger.hpp"
 
 namespace RDP
 {
-    // pw(k) = k % (2**w)
-    int pw(int k, int w) {
-        return k % (int) pow(2, w);
+
+    void printArray(BigInteger * arr, int size) {
+        for (int i =0; i<size; i++) {
+                std::cout << arr[i] << " ";
+        }
+        std::cout << std::endl;
     }
 
-    void get_Dw(int *& Dw, int * D, int w, int size, int &size_Dw) {
-        Dw = new int[size];
-        std::list<int> Dw_list;
+
+    /* Find if a value exists in an array */
+    int findValue(BigInteger * arr, int size, BigInteger item) {
+        // int found = 0;
+        for (int i =0; i < size; i++) {
+            if (arr[i] == item) return 1;
+        }
+        return 0;
+    }
+
+    // Calcuclate pw(k) = k % (2**w)
+    BigInteger pw(BigInteger k, int w) {
+        return BI_Residue(k, (int) pow(2, w));
+    }
+
+    /* Get Dw = pw(d) for each d in D
+     * Parameters:
+     *      Dw      = an empty array that is filled by the results of pw(d)
+     *      w       = is needed to calculcate pw(d)
+     *      D       = Array of digit set D
+     *      size    = size of D digit set
+     *      size_DW = a reference to size of Dw array
+     */
+    void get_Dw(BigInteger *& Dw, BigInteger * D, int w, int size, int &size_Dw) {
+        Dw = new BigInteger[size];
+        std::list<BigInteger> Dw_list;
         for (int i = 0; i<size; i++){
             Dw_list.push_back(pw(D[i], w));
         }
         // Sort Dw
         Dw_list.sort();
+        // Remove duplicates
         Dw_list.unique();
-        int index = 0;
+        int index = 0; // used to fill the array Dw
         size_Dw = Dw_list.size();
-        for (std::list<int>::iterator it=Dw_list.begin(); it!=Dw_list.end(); ++it) {
+        for (std::list<BigInteger>::iterator it=Dw_list.begin(); it!=Dw_list.end(); ++it) {
             Dw[index++] = *it;
         }
     }
 
-    void get_Dw_complement(int *& Dw_complement, int * D, int w, int size, int &size_Dw_Comp) {
-        int * Dw;
+    void get_D_k (BigInteger * D, int size, BigInteger *& D_less_k, BigInteger k, int &size_D_less_k) {
+        std::list<BigInteger> D_k_list;
+        for (int i = 0; i < size; i++) {
+            if (D[i] < k) {
+                D_k_list.push_back(D[i]);
+            }
+            else {
+                break;
+            }
+        }
+        D_k_list.sort();
+        D_k_list.unique();
+        size_D_less_k = D_k_list.size();
+        D_less_k = new BigInteger[size_D_less_k];
+        int index = 0;
+        for (std::list<BigInteger>::iterator it=D_k_list.begin(); it!=D_k_list.end(); ++it) {
+            D_less_k[index++] = *it;
+        }
+    }
+
+    void get_Dw_complement(BigInteger *& Dw_complement, BigInteger * D, int w, int size, int &size_Dw_Comp) {
+        BigInteger * Dw;
         int size_Dw;
         get_Dw(Dw, D, w, size, size_Dw);
-        std::list<int> Dw_complement_list (Dw, Dw+size_Dw);
-        int temp;
-        int constant = (int) pow(2, w);
+        std::list<BigInteger> Dw_complement_list (Dw, Dw+size_Dw);
+        BigInteger temp;
+        BigInteger constant = (int) pow(2, w);
         for (int i = 0; i < size_Dw; i++) {
             temp = constant - Dw[i];
             Dw_complement_list.push_back(temp);
@@ -41,59 +90,50 @@ namespace RDP
         Dw_complement_list.unique();
 
         size_Dw_Comp = Dw_complement_list.size();
-        Dw_complement = new int[size_Dw_Comp];
+        Dw_complement = new BigInteger[size_Dw_Comp];
         int index = 0;
-        std::list<int>::iterator it=Dw_complement_list.begin();
+        std::list<BigInteger>::iterator it=Dw_complement_list.begin();
         for (int i = 0; i < size_Dw_Comp; i++) {
             Dw_complement[i] = *it;
             it++;
         }
-
+        delete [] Dw;
     }
 
-    int get_Wn(int * D, int size) {
-        int max = D[0];
+    // Computes \floor(log_2(max(D)))
+    int get_Wn(BigInteger * D, int size) {
+        BigInteger max(D[0]);
         // Get the max element in D
         for (int i = 1; i<size; i++){
             if (D[i] > max) max = D[i];
         }
-        return (int) floor(log2(max));
+
+        int targetlevel = 0;
+        while (max/2 != 0) {
+            ++targetlevel;
+            max = max/2;
+        }
+        return targetlevel;
     }
 
-    int getWMax(int k, int Wn, int * D, int size) {
+    int getWMax(BigInteger k, int Wn, BigInteger * D, int size) {
         int w = Wn + 2; // Upper bound of w
-        int * Dw_complement;
-        int size_Dw_Comp;
-        bool cond1 = true;
+        BigInteger constant;
         for (int i=Wn+2; i > 0; i--) {
             // Search if di < k
-            get_Dw_complement(Dw_complement, D, i, size, size_Dw_Comp);
-
-            for (int j = 0; j < size_Dw_Comp; j++) {
-                if (Dw_complement[j] >= k) {
-                    cond1 = false;
-                    break;
+            constant = (int) pow(2, i);
+            for (int j = 0; j < size; j++) {
+                if (pw(D[j], i) == pw(k, i)) {
+                    return i;
                 }
-            }
-            // Pick a smaller w
-            if (!cond1) {
-                cond1 = true;
-                continue;
-            }
-            
-            
-            int pw_k = pw(k, i);
-            int * p = std::find(Dw_complement, Dw_complement+size_Dw_Comp, pw_k);
-            // std::cout << "Pw(k) = " << pw_k << ", P > " << *p << std::endl;
-            if(p != Dw_complement+size_Dw_Comp) {
-                return i;
+                if (pw(k, i) == (constant - pw(D[j], i)))
+                    return i;
             }
         }
-        std::cout << "No w found to match the condition" << std::endl;
     }
 
-    int digitD(int k, int * D, int size) {
-        // std::cout << "---------------------------------" << std::endl;
+    BigInteger digitD(BigInteger k, BigInteger * D, int size) {
+        int findK = findValue(D, size, k);
         std::list<int> tempResult;
         if (k%2 == 0) {
             return 0;
@@ -101,59 +141,65 @@ namespace RDP
         if (k == 1) {
             return k;
         }
+
+        BigInteger * D_less_k; //array that contains D value less than k
+        int size_D_less_k;
+        // Get all the values of D less than k
+        get_D_k(D, size, D_less_k, k, size_D_less_k);
+
         int Wn = get_Wn(D, size);
-        int WMAX = getWMax(k, Wn, D, size);
-        int * Dw;
+        int WMAX = getWMax(k, Wn, D_less_k, size_D_less_k);
+
+
+
+        BigInteger * Dw;
         int size_Dw;
-        get_Dw(Dw, D, WMAX, size, size_Dw);
-        // std::cout << "Wn > " << Wn << ", Wmax > " << WMAX << ", size_Dw >> " << size_Dw << std::endl;
-        for (int i =0; i<size_Dw; i++) {
-            // std::cout << Dw[i] << " ";
-        }
-        // std::cout << std::endl;
-        int pw_k = pw(k, WMAX);
-        // std::cout << "pw(k) > " << pw_k << std::endl;
+        get_Dw(Dw, D_less_k, WMAX, size_D_less_k, size_Dw);
+        BigInteger * Dw_complement;
+        int size_Dw_comp;
+        get_Dw_complement(Dw_complement, D_less_k, WMAX, size_D_less_k, size_Dw_comp);
+
+        BigInteger pw_k = pw(k, WMAX);
         /* If pwmax(k) in Dwmax:
-         *      if (pw(k) == pw(d)) return d
-         */
-        int * found = std::find(Dw, Dw+size_Dw, pw_k);
-        if (found != Dw+size_Dw) {
-            for (int j = 0; j < size; j++) {
-                if (pw(k, WMAX) == pw(D[j], WMAX)) {
-                    // std::cout << "D >> " << D[j] << std::endl;
-                    return D[j];
+        *      if (pw(k) == pw(d)) return d
+        */
+        int found = findValue(Dw, size_Dw, pw_k);
+        if (found) {
+            for (int j = 0; j < size_D_less_k; j++) {
+                if (pw(k, WMAX) == pw(D_less_k[j], WMAX)) {
+                    delete [] Dw;
+                    delete [] Dw_complement;
+                    return D_less_k[j];
                 }
             }
         }
 
-        int pw_comp = (int) pow(2, WMAX) - pw(k, WMAX);
-        // std::cout << "2^w - pw(k) > " << pw_comp << std::endl;
-        found = std::find(Dw, Dw+size_Dw, pw_comp);
-        if (found != Dw+size_Dw) {
-            for (int j = 0; j < size; j++) {
-                if (((int) pow(2, WMAX) - pw(k, WMAX)) == pw(D[j], WMAX)) {
-                    // std::cout << "D >> " << -D[j] << std::endl;
-                    return -D[j];
+        BigInteger pw_comp = (int) pow(2, WMAX) - pw(k, WMAX);
+        found = findValue(Dw_complement, size_Dw_comp, pw_comp);
+        if (found) {
+            for (int j = 0; j < size_D_less_k; j++) {
+                if (((int) pow(2, WMAX) - pw(D_less_k[j], WMAX)) == pw(k, WMAX)) {
+                    D_less_k[j].sign = -1;
+                    delete [] Dw;
+                    delete [] Dw_complement;
+                    return D_less_k[j];
                 }
             }
         }
-
-        std::cout << "No digit D was found" << std::endl;
     }
 
 
-    void RDPAlgorithm(int k, int * D, int size, int *& result, int &resultSize) {
-        std::list<int> resultList;
-        int ki;
+    void RDPAlgorithm(BigInteger k, BigInteger * D, int size, BigInteger *& result, int &resultSize) {
+        std::list<BigInteger> resultList;
+        BigInteger ki;
         while (k != 0) {
             ki = digitD(k, D, size);
             k = (k - ki) / 2;
-            // std::cout << "k > " << k << std::endl;
             resultList.push_back(ki);
         }
-        std::list<int>::iterator it = resultList.begin();
+        std::list<BigInteger>::iterator it = resultList.begin();
         resultSize = resultList.size();
-        result = new int[resultSize];
+        result = new BigInteger[resultSize];
         for (int i = 0; i < resultSize; i++) {
             result[i] = *it;
             it++;
