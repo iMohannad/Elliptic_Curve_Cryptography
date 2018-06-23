@@ -6,7 +6,7 @@ using namespace RDP;
 
 int main() {
     int k = 31415;
-    int D[] = {1, 19, 23, 33, 47, 55, 79, 85, 89, 93};
+    BigInteger D[] = {1, 19, 23, 33, 47, 55, 79, 85, 89, 93};
     int size = sizeof(D)/sizeof(*D);
     // int * Dw;
     // int Wn = get_Wn(D, size);
@@ -30,7 +30,7 @@ int main() {
 
     // cout << endl;
 
-    int * result;
+    BigInteger * result;
     int resultSize;
     RDPAlgorithm(k, D, size, result, resultSize);
 
